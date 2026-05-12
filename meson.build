@@ -8,7 +8,8 @@ project(
 boids = executable(
     'boids',
     sources: [
-        'src/main.cpp'
+        'src/main.cpp',
+        'src/simulation.cpp'
     ],
     install : false,
     include_directories: include_directories('src')

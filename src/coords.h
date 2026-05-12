@@ -7,10 +7,10 @@ namespace boids {
 /**
  * @brief Represents a two-dimensional coordinate or vector.
  *
- * `Coords` stores an `(x, y)` pair using double-precision floating-point values.
- * It can be used both as a position in 2D space and as a vector for common
- * vector operations such as addition, subtraction, scaling, normalization, and
- * measuring length.
+ * `Coords` stores an `(x, y)` pair using double-precision floating-point
+ * values. It can be used both as a position in 2D space and as a vector for
+ * common vector operations such as addition, subtraction, scaling,
+ * normalization, and measuring length.
  */
 struct Coords {
   /**
@@ -32,7 +32,7 @@ struct Coords {
    *
    * @return The distance from the origin `(0, 0)` to this coordinate.
    */
-  double length() const { return sqrt(x * x + y * y); }
+  [[nodiscard]] double length() const { return sqrt(x * x + y * y); }
 
   /**
    * @brief Returns a normalized copy of this vector.
@@ -44,9 +44,24 @@ struct Coords {
    * @return A unit-length vector in the same direction, or `{0.0, 0.0}` if this
    * vector has zero length.
    */
-  Coords normalized() const {
+  [[nodiscard]] Coords normalized() const {
     const auto len = length();
     return len > 0.0 ? Coords{x / len, y / len} : Coords{0.0, 0.0};
+  }
+
+  /**
+   * @brief Returns a copy of this vector with its length capped.
+   *
+   * If the vector's length exceeds `max_length`, it is scaled down to that
+   * maximum length while keeping the same direction. Otherwise, the vector
+   * is returned unchanged.
+   *
+   * @param max_length The maximum allowed length.
+   * @return A vector whose length is at most `max_length`.
+   */
+  [[nodiscard]] Coords limited(const double max_length) const {
+    const auto len = length();
+    return len > max_length ? normalized() * max_length : *this;
   }
 
   /**
